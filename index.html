@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>2026考研英语二｜单词冒险 V3</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#f6f3ee;color:#29251f;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+button{font:inherit;touch-action:manipulation}
+.app{max-width:900px;margin:auto;min-height:100vh;padding-bottom:90px}
+header{padding:28px 20px 18px;background:linear-gradient(135deg,#29251f,#51463b);color:#fff;border-radius:0 0 28px 28px}
+.small{font-size:13px;opacity:.72}.title{font-size:28px;font-weight:800;margin:7px 0}.sub{opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.stat{background:rgba(255,255,255,.12);padding:11px;border-radius:14px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;opacity:.7}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 14px 4px}
+nav button,.card button{border:0;border-radius:14px;padding:12px;background:#fff;box-shadow:0 2px 12px #0000000d;color:#29251f}
+nav button.active{background:#29251f;color:#fff}
+main{padding:10px 14px}.page{display:none}.page.active{display:block}
+.card{background:#fff;border-radius:22px;padding:20px;margin:10px 0;box-shadow:0 5px 22px #0000000b}
+.hero{padding:28px 22px;text-align:center}.word{font-size:42px;font-weight:900;letter-spacing:-1px}.meaning{font-size:20px;margin:8px 0 18px}
+.progress{height:9px;background:#eee;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#29251f;border-radius:99px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.primary{background:#29251f!important;color:#fff!important}.soft{background:#eee9e1!important}
+.big{width:100%;padding:16px!important;font-weight:700}
+.option{width:100%;text-align:left;margin:7px 0;padding:15px!important}
+.feedback{min-height:24px;font-weight:700;margin-top:12px}
+.lover{background:#29251f;color:#fff}.lover .small{color:#fff}.bubble{background:#fff;color:#29251f;border-radius:18px;padding:16px;margin:12px 0}
+.chatrow{display:flex;gap:8px}.chatrow input{flex:1;border:1px solid #ddd;border-radius:14px;padding:13px;font-size:16px}
+.reward{display:flex;justify-content:space-between;align-items:center;border:1px solid #eee3d6;border-radius:16px;padding:15px;margin:9px 0}
+.lock{opacity:.45}.tag{font-size:12px;background:#eee9e1;padding:5px 9px;border-radius:99px}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#29251f;color:#fff;padding:12px 17px;border-radius:99px;opacity:0;transition:.25s;z-index:9;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:520px){.word{font-size:36px}.stats{grid-template-columns:repeat(2,1fr)}nav{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="small">2026 考研英语（二）· 单词冒险</div>
+ <div class="title">今天也陪你背一点</div>
+ <div class="sub">这是专门适配 iPad 触屏的 V3 版本</div>
+ <div class="stats">
+  <div class="stat"><b id="xp">0</b><span>XP</span></div>
+  <div class="stat"><b id="done">0</b><span>今日单词</span></div>
+  <div class="stat"><b id="streak">0</b><span>连对</span></div>
+  <div class="stat"><b id="aff">0</b><span>心动值</span></div>
+ </div>
+</header>
+
+<nav>
+ <button class="active" data-page="home">首页</button>
+ <button data-page="words">背单词</button>
+ <button data-page="boss">BOSS战</button>
+ <button data-page="lover">恋人</button>
+</nav>
+
+<main>
+<section id="home" class="page active">
+ <div class="card hero">
+  <div class="small">今日任务</div>
+  <h2>先完成 10 个词</h2>
+  <p>背不动的时候，直接点下面的“我学不动了”。</p>
+  <div class="progress"><div class="bar" id="homebar"></div></div>
+  <div class="actions">
+   <button class="primary big" onclick="showPage('words')">开始背词</button>
+   <button class="soft big" onclick="encourage()">我学不动了</button>
+  </div>
+ </div>
+ <div class="card lover">
+  <div class="small">你的虚拟恋人</div>
+  <div class="bubble" id="homeLove">“别一次想着背完所有。先把眼前这个词记住。”</div>
+  <button class="big" onclick="showPage('lover')">去找他聊聊</button>
+ </div>
+</section>
+
+<section id="words" class="page">
+ <div class="card">
+  <div class="small" id="count">1 / 20</div>
+  <div class="word" id="w">decline</div>
+  <div class="meaning" id="m">下降；拒绝；衰退</div>
+  <div class="small">词义记住了吗？</div>
+  <div class="actions">
+   <button class="soft big" onclick="mark(false)">不太会</button>
+   <button class="primary big" onclick="mark(true)">会了</button>
+  </div>
+  <button class="soft big" style="margin-top:10px" onclick="nextWord()">下一个</button>
+  <div class="feedback" id="wordFeedback"></div>
+ </div>
+</section>
+
+<section id="boss" class="page">
+ <div class="card hero">
+  <div class="small">连续答对 5 题解锁恋人特别奖励</div>
+  <h2 id="bossQ">BOSS：选出正确词义</h2>
+  <div class="word" id="bossWord">substantial</div>
+  <div id="opts"></div>
+  <div class="feedback" id="bossFeedback"></div>
+ </div>
+</section>
+
+<section id="lover" class="page">
+ <div class="card lover">
+  <div class="small">恋人聊天 · 心动值 <span id="aff2">0</span></div>
+  <div class="bubble" id="chatLog">“来了？今天背了几个词。别装没事，我看得出来你累不累。”</div>
+  <div class="chatrow">
+   <input id="chatInput" placeholder="告诉他你现在的状态">
+   <button class="primary" onclick="sendChat()">发送</button>
+  </div>
+  <div class="actions">
+   <button class="soft big" onclick="encourage()">我需要鼓励</button>
+   <button class="soft big" onclick="showReward()">看奖励</button>
+  </div>
+ </div>
+ <div class="card">
+  <h3>关系进度</h3>
+  <div class="progress"><div class="bar" id="lovebar"></div></div>
+  <p class="small" id="loveText">完成学习任务可以增加心动值。</p>
+ </div>
+ <div class="card">
+  <h3>奖励</h3>
+  <div id="rewards"></div>
+ </div>
+</section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const words=[
+["decline","下降；拒绝；衰退"],["compromise","妥协；折中"],["substantial","大量的；实质的"],["retain","保留；保持"],
+["constitute","构成；组成"],["attribute","把……归因于；属性"],["derive","获得；源于"],["justify","证明……合理；为……辩护"],
+["exceed","超过；超出"],["ambiguous","模棱两可的"],["implement","实施；执行"],["indicate","表明；指出"],
+["significant","重要的；显著的"],["maintain","维持；主张"],["conventional","传统的；惯例的"],["controversial","有争议的"],
+["allocate","分配；拨给"],["consume","消耗；消费"],["enhance","增强；提高"],["perspective","观点；视角"]
+];
+let state={i:0,xp:0,done:0,streak:0,aff:0,bossStreak:0,bossWin:false};
+const saved=sessionStorage.getItem("examV3");
+if(saved) try{state={...state,...JSON.parse(saved)}}catch(e){}
+function save(){sessionStorage.setItem("examV3",JSON.stringify(state));update()}
+function update(){
+ xp.textContent=state.xp;done.textContent=state.done;streak.textContent=state.streak;aff.textContent=state.aff;aff2.textContent=state.aff;
+ homebar.style.width=Math.min(100,state.done/10*100)+"%";lovebar.style.width=Math.min(100,state.aff/50*100)+"%";
+ loveText.textContent=state.aff>=50?"关系等级：特别陪伴":"关系等级："+(Math.floor(state.aff/10)+1)+" · 继续学习就会解锁更多聊天奖励";
+ renderRewards();
+}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+ if(id==="words")renderWord(); if(id==="boss")renderBoss();
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+function renderWord(){
+ const a=words[state.i%words.length];w.textContent=a[0];m.textContent=a[1];count.textContent=(state.i%words.length+1)+" / "+words.length;wordFeedback.textContent="";
+}
+function nextWord(){state.i++;renderWord()}
+function mark(ok){
+ if(ok){state.xp+=10;state.done++;state.streak++;state.aff+=2;wordFeedback.textContent="记住了。不错，继续。";toast("XP +10 · 心动值 +2")}
+ else{state.xp+=2;state.streak=0;state.aff+=1;wordFeedback.textContent="没关系，错词会留下来，晚点再复习。";toast("这个词先标记为薄弱词")}
+ save(); setTimeout(nextWord,450);
+}
+function encourage(){
+ const arr=["先别急。今天不是要把所有词都吃掉，我们先解决眼前这一个。","错了就错了，我不拿这个评判你。再来一次。","你现在觉得累很正常。休息一分钟，然后回来，我陪你继续。","别盯着还剩多少，只看下一题。答完这一题再说。","今天能坐在这里背单词，本身就是在往前走。"];
+ const msg=arr[Math.floor(Math.random()*arr.length)];
+ homeLove.textContent="“"+msg+"”";chatLog.textContent="“"+msg+"”";state.aff++;save();showPage("lover");
+}
+function renderBoss(){
+ const a=words[Math.floor(Math.random()*words.length)];bossWord.textContent=a[0];bossFeedback.textContent="";
+ let choices=[a[1]];
+ while(choices.length<4){let x=words[Math.floor(Math.random()*words.length)][1];if(!choices.includes(x))choices.push(x)}
+ choices.sort(()=>Math.random()-.5);
+ opts.innerHTML=choices.map(x=>`<button class="option" onclick="bossAnswer(${JSON.stringify(x)},${JSON.stringify(a[1])})">${x}</button>`).join("");
+}
+function bossAnswer(x,correct){
+ if(x===correct){state.bossStreak++;state.xp+=15;state.aff+=3;bossFeedback.textContent="正确。BOSS掉血了。连续 "+state.bossStreak+" 次。";toast("BOSS战正确 · XP +15");if(state.bossStreak>=5&&!state.bossWin){state.bossWin=true;state.xp+=50;state.aff+=20;toast("解锁：恋人特别奖励");}}
+ else{state.bossStreak=0;bossFeedback.textContent="这题错了。别急，重新来。";toast("连击中断")}
+ save();setTimeout(renderBoss,650);
+}
+function renderRewards(){
+ rewards.innerHTML=[
+ ["完成10个单词","解锁：今日夸夸",state.done>=10],
+ ["完成20个单词","解锁：专属陪伴聊天",state.done>=20],
+ ["BOSS连续5题","解锁：恋人特别奖励",state.bossWin],
+ ["心动值50","关系等级：特别陪伴",state.aff>=50]
+ ].map(r=>`<div class="reward ${r[2]?'':'lock'}"><div><b>${r[1]}</b><div class="small">${r[0]}</div></div><span class="tag">${r[2]?'已解锁':'未解锁'}</span></div>`).join("");
+}
+function showReward(){showPage("lover");toast("奖励已显示在下方")}
+function sendChat(){
+ const v=chatInput.value.trim();if(!v)return;
+ let reply="嗯，我听着呢。你说。";
+ if(v.includes("累"))reply="那就歇两分钟。我不催你。休息完回来，陪你做下一题。";
+ else if(v.includes("不会")||v.includes("记不住"))reply="不会就从不会的开始。把它拆成小块，不需要一次全记住。";
+ else if(v.includes("放弃"))reply="先别急着决定放弃。今天只做眼前十分钟，十分钟之后再决定。";
+ else if(v.includes("喜欢"))reply="知道了。那就拿一点喜欢我的劲儿，去把下一个单词记住。";
+ chatLog.innerHTML+=`<div class="bubble"><b>你：</b>${escape(v)}</div><div class="bubble"><b>他：</b>${reply}</div>`;
+ chatInput.value="";state.aff++;save();
+}
+function escape(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1600)}
+update();renderWord();
+</script>
+</body></html>
